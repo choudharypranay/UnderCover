@@ -24,7 +24,8 @@ public class PhoneCallReceiver extends BroadcastReceiver
                 String extraState = bundle.getString(TelephonyManager.EXTRA_STATE);
                 if (extraState != null)
                 {
-                    if(extraState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK))
+                    if(extraState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK) ||
+                            extraState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
                     {
                         Toast.makeText(context, "Incoming...", Toast.LENGTH_SHORT).show();
                         Intent callIntent = new Intent(context, RecordService.class);

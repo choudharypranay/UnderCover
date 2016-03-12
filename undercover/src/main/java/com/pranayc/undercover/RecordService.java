@@ -147,7 +147,7 @@ public class RecordService extends Service
             String password =  LocalStorage.get(this, "PassWord");
             System.err.println(username + " ~ " + password);
             GMailSender sender = new GMailSender(username, password);
-            sender.addAttachment(absolutePath, "Media");
+            sender.addAttachment(absolutePath, "Please find the attached media");
             sender.sendMail("Undercover Report", "Please find the attached media", username, username);
         }
         catch (Exception e)
