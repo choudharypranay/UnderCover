@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Undercover Settings</string>
+
+    <string name="undercover_present">Recorder app is Installed on this device</string>
+    <string name="undercover_absent">Recorder app is not Installed on this device</string>
+    <string name="undercover_install">Install recorder from play store</string>
+
+    <string name="config_present">Recorder app is already configured</string>
+    <string name="config_absent">Recorder app is not configured</string>
+    <string name="configbtn_present">Edit current configuration</string>
+    <string name="configbtn_absent">Configure now</string>
+</resources>

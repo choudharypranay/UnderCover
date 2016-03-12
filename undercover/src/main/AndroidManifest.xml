@@ -1,0 +1,43 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pranayc.undercover"
+    android:installLocation="auto"
+    android:sharedUserId="com.pranayc">
+
+    <uses-feature android:name="android.hardware.telephony"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <permission
+        android:name="com.pranayc.undercover.SETTINGS"
+        android:label="Undercover Configuration"
+        android:protectionLevel="signature" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <receiver android:name="com.pranayc.undercover.PhoneCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.pranayc.undercover.ConfigService"
+            android:exported="true"
+            android:permission="com.pranayc.undercover.SETTINGS" />
+
+        <activity android:name="com.pranayc.undercover.ConfigResultDialog" android:exported="true" />
+
+    </application>
+
+</manifest>
