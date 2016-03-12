@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class StatusActivity extends Activity
+public class StatusActivity extends Activity implements View.OnClickListener
 {
     private ServiceConnection serviceConnection;
     private Messenger messenger;
@@ -33,6 +33,7 @@ public class StatusActivity extends Activity
                     Button btn = (Button) findViewById(R.id.config_button);
                     tv.setText(R.string.config_absent);
                     btn.setText(R.string.configbtn_absent);
+                    btn.setOnClickListener(StatusActivity.this);
                 }
                     break;
                 case 1:
@@ -41,6 +42,7 @@ public class StatusActivity extends Activity
                     Button btn = (Button) findViewById(R.id.config_button);
                     tv.setText(R.string.config_present);
                     btn.setText(R.string.configbtn_present);
+                    btn.setOnClickListener(StatusActivity.this);
                 }
                     break;
             }
@@ -71,7 +73,7 @@ public class StatusActivity extends Activity
                 {
                     messenger = new Messenger(service);
 
-                    Message msg = Message.obtain(null, 10);
+                    Message msg = Message.obtain(null, 64);
                     msg.replyTo = new Messenger(HANDLER);
 
                     try
@@ -95,8 +97,6 @@ public class StatusActivity extends Activity
             Intent intent = new Intent();
             intent.setComponent(new ComponentName("com.pranayc.undercover", "com.pranayc.undercover.ConfigService"));
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-            //HANDLER.sendEmptyMessage(1);
         }
     }
 
@@ -116,6 +116,39 @@ public class StatusActivity extends Activity
             installedStatus.setText(R.string.undercover_absent);
             installButton.setVisibility(View.VISIBLE);
             return false;
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        startActivityForResult(new Intent(this, ConfigActivity.class), 100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode==100 && resultCode==1)
+        {
+            String username = data.getStringExtra("UserName");
+            String password = data.getStringExtra("PassWord");
+
+            final Message msg = Message.obtain(null, 786);
+
+            final Bundle bundle = new Bundle();
+            bundle.putString("UserName", username);
+            bundle.putString("PassWord", password);
+            msg.setData(bundle);
+            msg.replyTo = new Messenger(HANDLER);
+
+            try
+            {
+                messenger.send(msg);
+            }
+            catch (RemoteException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

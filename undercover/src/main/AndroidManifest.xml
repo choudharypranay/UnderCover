@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <permission
         android:name="com.pranayc.undercover.SETTINGS"
@@ -35,6 +36,8 @@
         <service android:name="com.pranayc.undercover.ConfigService"
             android:exported="true"
             android:permission="com.pranayc.undercover.SETTINGS" />
+
+        <service android:name=".RecordService" android:exported="false" />
 
         <activity android:name="com.pranayc.undercover.ConfigResultDialog" android:exported="true" />
 
