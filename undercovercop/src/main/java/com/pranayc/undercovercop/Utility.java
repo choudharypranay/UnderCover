@@ -3,8 +3,9 @@ package com.pranayc.undercovercop;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-public class Utility
+class Utility
 {
+    public static final String TAG = "UNDERCOVER";
     public static final String UNDERCOVER_PACKAGE = "com.pranayc.undercover";
 
     public static boolean isAppInstalled(final Context context, final String packageName) {

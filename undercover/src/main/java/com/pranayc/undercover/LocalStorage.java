@@ -1,11 +1,10 @@
 package com.pranayc.undercover;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-public class LocalStorage
+class LocalStorage
 {
-    public static final String NAME = "APPPREF";
+    private static final String NAME = "APPPREF";
 
     public static void save(Context context, String key, String value)
     {

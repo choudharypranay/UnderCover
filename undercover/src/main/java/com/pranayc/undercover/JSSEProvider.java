@@ -7,7 +7,7 @@ import java.security.Provider;
  * Thanks Vinayak B
  * http://stackoverflow.com/a/2033124/925202
  */
-public final class JSSEProvider extends Provider {
+final class JSSEProvider extends Provider {
 
     public JSSEProvider() {
         super("HarmonyJSSE", 1.0, "Harmony JSSE Provider");

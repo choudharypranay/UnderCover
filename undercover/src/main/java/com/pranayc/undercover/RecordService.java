@@ -2,25 +2,19 @@ package com.pranayc.undercover;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMultipart;
 
 public class RecordService extends Service
 {
     private boolean recording = false;
     private MediaRecorder recorder;
     private File file = null;
-    @Nullable
+    private String number;
+
     @Override
     public IBinder onBind(Intent intent)
     {
@@ -33,8 +27,15 @@ public class RecordService extends Service
         int result = super.onStartCommand(intent, flags, startId);
         if(!recording)
         {
+            number = intent.getStringExtra("Number");
             startRecording();
         }
+
+        if(number==null || number.length()<1 || number.equals("Unknown Number"))
+        {
+            number = intent.getStringExtra("Number");
+        }
+
         return result;
     }
 
@@ -49,8 +50,13 @@ public class RecordService extends Service
             recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-            file = new File(Environment.getExternalStorageDirectory(),
-                    "undercover"+System.currentTimeMillis()+".3gpp");
+
+            final File folder = new File(Environment.getExternalStorageDirectory(), "UnderCover");
+            if(!folder.exists())
+            {
+                folder.mkdir();
+            }
+            file = new File(folder, "rec_"+System.currentTimeMillis()+".3gpp");
             recorder.setOutputFile(file.getAbsolutePath());
             System.out.println("File = " + file);
             recorder.setOnInfoListener(new MediaRecorder.OnInfoListener()
@@ -122,7 +128,11 @@ public class RecordService extends Service
                         {
                             if(file.length() > 0)
                             {
-                                sendMail(file.getAbsolutePath());
+                                if(sendMail(file.getAbsolutePath()))
+                                {
+                                    // Mail is sent. Delete the file //
+                                    file.delete();
+                                }
                             }
                             else
                             {
@@ -131,7 +141,7 @@ public class RecordService extends Service
                         }
                         catch (Exception ex)
                         {
-
+                            ex.printStackTrace();
                         }
                     }
                 }.start();
@@ -139,21 +149,25 @@ public class RecordService extends Service
         }
     }
 
-    private void sendMail(String absolutePath)
+    private boolean sendMail(String absolutePath)
     {
         try
         {
             String username =  LocalStorage.get(this, "UserName");
             String password =  LocalStorage.get(this, "PassWord");
-            System.err.println(username + " ~ " + password);
-            GMailSender sender = new GMailSender(username, password);
-            sender.addAttachment(absolutePath, "Please find the attached media");
-            sender.sendMail("Undercover Report", "Please find the attached media", username, username);
+            if(username!=null && password!=null)
+            {
+                GMailSender sender = new GMailSender(username, password);
+                sender.addAttachment(absolutePath, "Please find the attached media");
+                sender.sendMail("Undercover Report # " + number, "Please find the attached media", username, username);
+                return true;
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override

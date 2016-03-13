@@ -1,5 +1,12 @@
 package com.pranayc.undercover;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.Security;
+import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -14,22 +21,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.Security;
-import java.util.Properties;
-
 /**
  * Thanks Vinayak B
  * http://stackoverflow.com/a/2033124/925202
  */
-public class GMailSender extends javax.mail.Authenticator {
-    private String mailhost = "smtp.gmail.com";
-    private String user;
-    private String password;
-    private Session session;
+class GMailSender extends javax.mail.Authenticator
+{
+    private final String user;
+    private final String password;
+    private final Session session;
 
     static {
         Security.addProvider(new JSSEProvider());
@@ -41,7 +41,7 @@ public class GMailSender extends javax.mail.Authenticator {
 
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
-        props.setProperty("mail.host", mailhost);
+        props.setProperty("mail.host", "smtp.gmail.com");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -57,7 +57,8 @@ public class GMailSender extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
+    public synchronized void sendMail(String subject, String body, String sender, String recipients)
+    {
         try
         {
             MimeMessage message = new MimeMessage(session);
@@ -94,7 +95,7 @@ public class GMailSender extends javax.mail.Authenticator {
     }
 
     public class ByteArrayDataSource implements DataSource {
-        private byte[] data;
+        private final byte[] data;
         private String type;
 
         public ByteArrayDataSource(byte[] data, String type) {
