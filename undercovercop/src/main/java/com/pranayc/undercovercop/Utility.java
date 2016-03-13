@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 class Utility
 {
+    // TAG for Logger
     public static final String TAG = "UNDERCOVER";
     public static final String UNDERCOVER_PACKAGE = "com.pranayc.undercover";
 
